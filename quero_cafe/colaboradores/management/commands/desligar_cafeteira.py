@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 import requests
 
 class Command(BaseCommand):
-    help = "Envia lembrete para os membros do canal."
+    help = "Envia lembrete para os membros do canal #quero-cafe desligarem a cafeteira."
 
     def handle(self, *args, **options):
         mensagem = "DESLIGAR A CAFETEIRA"
