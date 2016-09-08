@@ -6,25 +6,32 @@ import requests
 #MODELS
 from colaboradores.models import Colaborador
 
+
 class Command(BaseCommand):
     help = "Comando escolhe um dos colaboradores que ainda não fizeram café."
 
     def handle(self, *args, **options):
         try:
-            colaboradores = Colaborador.objects.using('default').filter(flag_date__isnull=True)
+            #VOLUNTARIO
+            colaborador_escolhido = Colaborador.objects.using('default').filter(voluntary_date__isnull=False).order_by('voluntary_date').first()
 
-            if not colaboradores:
-                colaboradores = Colaborador.objects.all()
+            if not colaborador_escolhido:
+                #COLABORADORES QUE AINDA NÃO FORAM CHAMADOS
+                colaboradores = Colaborador.objects.using('default').filter(flag_date__isnull=True)
 
                 if not colaboradores:
-                    raise ValueError('Não existem colaboradores cadastrados')
+                    #TODOS OS COLABORADORES
+                    colaboradores = Colaborador.objects.all()
 
-                #ZERANDO A FLAG DE DATA DE TODOS OS COLABORADORES
-                colaboradores.update(flag_date=None)
+                    if not colaboradores:
+                        raise ValueError('Não existem colaboradores cadastrados')
 
-            #ESCOLHENDO COLABORADOR ALEATORIAMENTE
-            random_index = randint(0, colaboradores.count() - 1)
-            colaborador_escolhido = colaboradores[random_index]
+                    #ZERANDO A FLAG DE DATA DE TODOS OS COLABORADORES
+                    colaboradores.update(flag_date=None)
+
+                #ESCOLHENDO COLABORADOR ALEATORIAMENTE
+                random_index = randint(0, colaboradores.count() - 1)
+                colaborador_escolhido = colaboradores[random_index]
 
             #ADICIONANDO DATA DE CHAMADA DO COLABORADOR ESCOLHIDO
             colaborador_escolhido.flag_date = datetime.now()
@@ -37,6 +44,8 @@ class Command(BaseCommand):
             url = 'https://hooks.slack.com/services/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'
             payload = {"channel": "#quero-cafe", "username": "Véi Do Café", "text": mensagem, "icon_emoji": ":coffee:"}
             response = requests.post(url, data=payload, headers={})
+
+            print(response)
 
         except ValueError as error:
             print(repr(error))
