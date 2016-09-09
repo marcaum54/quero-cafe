@@ -10,15 +10,19 @@
             {% block page_title %}{% endblock page_title %} | Quero CAFÉ
         </title>
 
-        <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-        <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" crossorigin="anonymous">
 
         <style>
             body { padding-top: 50px; }
             h1 { margin-bottom: 30px; }
+
+            ul.usuarios li { cursor: pointer; }
+            ul.usuarios li::selection { background-color: #FFF; }
+
+            ul.usuarios li button { display: none; }
+            ul.usuarios li:hover button { display: block; }
         </style>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -28,6 +32,20 @@
         <![endif]-->
     </head>
     <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Coffee Rotation</a>
+                </div>
+                <div class="pull-right">
+                    <div id="navbar" class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{% url 'admin:logout' %}"><i class="fa fa-power-off"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
         <div class="container">
             {% block content %}{% endblock content %}
         </div>

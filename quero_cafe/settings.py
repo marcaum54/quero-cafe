@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 
     #APPS
     'core',
-    'colaboradores',
+    'coffee_rotation',
 ]
 
 MIDDLEWARE = [
