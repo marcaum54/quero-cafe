@@ -17,3 +17,5 @@ def users_list(request):
     return render(request, 'colaboradores/index.html', {
         'usuarios': usuarios
     })
+
+# def setAsVoluntary(request):

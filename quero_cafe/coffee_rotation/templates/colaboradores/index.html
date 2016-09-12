@@ -17,7 +17,7 @@
             <ul class="usuarios list-group">
                 {% for usuario in usuarios %}
                 <li class="list-group-item {% if usuario.turn %}disabled{% endif %}">
-                    {{ usuario.first_name }}
+                    {{ usuario.first_name }} {{ usuario.last_name }}
 
                     <div class="pull-right">
                         <button class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
