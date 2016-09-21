@@ -1,17 +1,20 @@
 from django.shortcuts import render
-from django.conf import settings
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
+from datetime import datetime
 
 from django.contrib.auth.models import User
 from coffee_rotation.models import Cycle
 from coffee_rotation.models import Turn
 from django.contrib import messages
 
+
 def users_list(request):
 
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (reverse_lazy('admin:login'), request.path))
+
+    cycle = Cycle.objects.last()
 
     usuarios = User.objects.all()
 
@@ -19,21 +22,19 @@ def users_list(request):
         'usuarios': usuarios
     })
 
-def setAsVoluntary(request):
+
+def set_as_voluntary(request):
 
     try:
-        current_user = request.user
-
+        user = request.user
         cycle = Cycle.objects.last()
+        voluntary_date = datetime.now()
 
-        turn = Turn.objects.filter(cycle=cycle, user=current_user)
+        Turn.objects.create(user=user, cycle=cycle, voluntary_date=voluntary_date)
 
-        if turn:
-            raise ValueError('O usuário ')
-
-        messages.success(request, 'Profile details updated.')
+        messages.success(request, 'Voluntariou-se com sucesso!')
 
     except ValueError as error:
         messages.error(request, error)
 
-    return redirect(reverse_lazy('admin:login'))
+    return redirect(reverse_lazy('list'))

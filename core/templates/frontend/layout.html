@@ -23,6 +23,8 @@
 
             ul.usuarios li button { display: none; }
             ul.usuarios li:hover button { display: block; }
+
+            .alert { margin-top: 20px; }
         </style>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -35,7 +37,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Coffee Rotation</a>
+                    <a class="navbar-brand" href="#"><i class="fa fa-coffee" aria-hidden="true"></i> Coffee Rotation</a>
                 </div>
                 <div class="pull-right">
                     <div id="navbar" class="collapse navbar-collapse">
@@ -48,14 +50,14 @@
         </nav>
         <div class="container">
             {% if messages %}
-            <div class="alert alert-warning alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <ul class="list-unstyled">
-                    {% for message in messages %}
-                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <ul class="list-unstyled">
+                        <li>{{ message }}</li>
+                    </ul>
+                </div>
+                {% endfor %}
             {% endif %}
 
             {% block content %}{% endblock content %}
