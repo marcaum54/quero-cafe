@@ -27,12 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-#LOCAL BUGFIX
-# //TODO: Fazer somente em ENV DEV
-
-import sys
-sys.path.insert(1, '/home/dpge/Projetos/quero_cafe_env/quero_cafe/')
-
 # Application definition
 
 INSTALLED_APPS = [
