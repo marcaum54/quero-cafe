@@ -39,7 +39,6 @@ INSTALLED_APPS = [
 
     #THIRDS
     'django_extensions',
-    'django_seed',
     'requests',
 
     #APPS
@@ -85,6 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'quero_cafe',
+        'HOST': '127.0.0.1',
         'USER': 'postgres',
         'PASSWORD': '',
     }
@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
