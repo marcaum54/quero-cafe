@@ -1,0 +1,10 @@
+body { padding-top: 50px; }
+h1 { margin-bottom: 30px; }
+
+ul.usuarios li { cursor: pointer; }
+ul.usuarios li::selection { background-color: #FFF; }
+
+ul.usuarios li button { display: none; }
+ul.usuarios li:hover button { display: block; }
+
+.alert { margin-top: 20px; }

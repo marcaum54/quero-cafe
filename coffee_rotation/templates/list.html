@@ -1,0 +1,81 @@
+{% extends 'frontend/layout.html' %}
+
+{% block page_title %} Colaboradores {% endblock page_title %}
+
+{% block css %}
+    <style>
+        body { padding-top: 50px; }
+        h1 { margin-bottom: 30px; }
+
+        ul.usuarios li { cursor: pointer; }
+        ul.usuarios li::selection { background-color: #FFF; }
+
+        ul.usuarios button { margin-top: -10px; }
+
+        .alert-error {
+            background-repeat: repeat-x;
+            border-color: #dca7a7;
+        }
+
+        .alert { margin-top: 20px; }
+    </style>
+{% endblock css %}
+
+{% block js %}
+    <script type="text/javascript">
+        (function($)
+        {
+            $('.show-modal-delete').click(function(e)
+            {
+                var action = $(this).data('action');
+                var modal = $('#modal-delete');
+
+                e.preventDefault();
+
+                modal.find('form').attr('action', action);
+                modal.modal('show');
+            });
+        })
+        (jQuery);
+    </script>
+{% endblock js %}
+
+{% block content %}
+
+    {% include 'partials/modal-delete.html' %}
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <h2>Faltantes</h2>
+            <ul class="usuarios list-group">
+                {% for usuario in not_calleds %}
+                <li class="list-group-item text-center">
+                    {{ usuario.first_name }} {{ usuario.last_name }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <h2>Turnos</h2>
+            <ul class="usuarios list-group">
+                {% for turn in turns %}
+                <li class="list-group-item text-center {% if turn.is_removed %}text-danger{% endif %}">
+                    <b>{{ turn.user.first_name }} {{ turn.user.last_name }}</b>
+                    <br/>
+                    <small>{{ turn.get_type }} em {{ turn.presenter_date }}</small>
+
+                    {% if not turn.is_removed %}
+                    <button type="button" class="btn btn-xs btn-danger pull-right show-modal-delete" data-action="{% url 'remove_turn' turn.id %}"><i class="fa fa-times"></i></button>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a class="btn btn-default" href="{% url 'choose_randomly' %}"><i class="fa fa-random" aria-hidden="true"></i> Escolher Aleatório</a>
+        <a class="btn btn-default" href="{% url 'set_as_voluntary' %}"><i class="fa fa-hand-spock-o" aria-hidden="true"></i> Voluntariar-se</a>
+    </div>
+
+{% endblock content %}
