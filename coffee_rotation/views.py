@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
+from django.core.management import call_command
 
 from django.contrib.auth.models import User
 from coffee_rotation.models.Cycle import Cycle
@@ -23,7 +24,7 @@ def list(request):
 
     turns = Turn.objects.filter(cycle=cycle)
 
-    calleds = Turn.objects.filter(date_removed__isnull=True).values_list('user', flat=True)
+    calleds = turns.values_list('user', flat=True)
 
     not_calleds = User.objects.exclude(pk__in=calleds)
 
@@ -80,24 +81,9 @@ def remove_turn(request, id):
 def choose_randomly(request):
 
     try:
-        if request.method != 'POST':
-            raise ValueError('Requisição tem que ser POST')
+        call_command('choose_randomly')
 
-        cycle = Cycle.objects.last()
-        turns = Turn.objects.filter(cycle=cycle)
-
-        calleds = Turn.objects.filter(date_removed__isnull=True).values_list('user', flat=True)
-        not_calleds = User.objects.exclude(pk__in=calleds)
-
-        if not not_calleds.count():
-
-            cycle = Cycle.objects.create(**{ 'name': re.sub('\d(?!\d)', lambda x: str(int(x.group(0)) + 1), cycle.name) })
-            turns = Turn.objects.filter(cycle=cycle)
-            not_calleds = User.objects.all()
-
-        choosed = randint(0, not_calleds.count() - 1)
-
-        messages.success(request, 'Turno removido com sucesso!')
+        messages.success(request, 'Usuário escolhido com sucesso!')
 
     except ValueError as error:
 
