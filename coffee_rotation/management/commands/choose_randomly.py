@@ -16,8 +16,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
+            #SCHEDULES HOURS
+            now = datetime.now()
+            schedules = { 'morning': now.replace(hour=8, minute=0, second=0), 'afternoon': now.replace(hour=13, minute=0, second=0) }
+
             #ACTUAL CYCLE
             cycle = Cycle.objects.last()
+
+            #LAST TURN
+            last_turn = Turn.objects.filter(cycle=cycle, date_removed__isnull=True).last()
+            penult_turn = Turn.objects.filter(cycle=cycle, date_removed__isnull=True).exclude(id=last_turn.id).last()
 
             #SEARCHING USERS NOT CHOOSED BEFORE
             turns = Turn.objects.filter(cycle=cycle)
@@ -25,8 +33,7 @@ class Command(BaseCommand):
             not_calleds = User.objects.exclude(pk__in=calleds)
 
             if not not_calleds.count():
-
-                cycle = Cycle.objects.create(**{ 'name': re.sub('\d(?!\d)', lambda x: str(int(x.group(0)) + 1), cycle.name) })
+                cycle = Cycle.objects.create(name=re.sub('\d(?!\d)', lambda x: str(int(x.group(0)) + 1), cycle.name))
                 not_calleds = User.objects.all()
 
             #CHOOSED RANDOMLY
@@ -40,4 +47,5 @@ class Command(BaseCommand):
             Message.send(text=mensagem)
 
         except ValueError as error:
+
             print(repr(error))

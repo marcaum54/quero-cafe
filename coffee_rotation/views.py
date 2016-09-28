@@ -20,7 +20,7 @@ def list(request):
     cycle = Cycle.objects.last()
 
     if cycle is None:
-        cycle = Cycle.objects.create(**{ 'name': 'Ciclo 01' })
+        cycle = Cycle.objects.create(name='Ciclo 01')
 
     turns = Turn.objects.filter(cycle=cycle)
 
