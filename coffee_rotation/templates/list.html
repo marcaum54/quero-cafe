@@ -1,43 +1,15 @@
 {% extends 'frontend/layout.html' %}
 
+{% load static from staticfiles %}
+
 {% block page_title %} Colaboradores {% endblock page_title %}
 
 {% block css %}
-    <style>
-        body { padding-top: 50px; }
-        h1 { margin-bottom: 30px; }
-
-        ul.usuarios li { cursor: pointer; }
-        ul.usuarios li::selection { background-color: #FFF; }
-
-        ul.usuarios button { margin-top: -10px; }
-
-        .alert-error {
-            background-repeat: repeat-x;
-            border-color: #dca7a7;
-        }
-
-        .alert { margin-top: 20px; }
-    </style>
+     <link rel="stylesheet" href="{% static 'css/list.css' %}">
 {% endblock css %}
 
 {% block js %}
-    <script type="text/javascript">
-        (function($)
-        {
-            $('.show-modal-delete').click(function(e)
-            {
-                var action = $(this).data('action');
-                var modal = $('#modal-delete');
-
-                e.preventDefault();
-
-                modal.find('form').attr('action', action);
-                modal.modal('show');
-            });
-        })
-        (jQuery);
-    </script>
+    <script type="text/javascript" src="{% static 'js/list.js' %}"></script>
 {% endblock js %}
 
 {% block content %}

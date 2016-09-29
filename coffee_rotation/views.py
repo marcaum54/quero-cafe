@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
 from django.core.management import call_command
+from core.helpers.slack import Message
 
 from django.contrib.auth.models import User
 from coffee_rotation.models.Cycle import Cycle
@@ -42,6 +43,10 @@ def set_as_voluntary(request):
         date_voluntary = datetime.now()
 
         Turn.objects.create(user=user, cycle=cycle, date_voluntary=date_voluntary)
+
+        #ENVIANDO MENSAGEM AO GRUPO DO SLACK
+        mensagem = "("+ user.first_name +" "+ user.last_name +") voluntariou-se para fazer o café."
+        Message.send(text=mensagem)
 
         messages.success(request, 'Voluntariou-se com sucesso!')
 

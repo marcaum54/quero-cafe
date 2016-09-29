@@ -127,4 +127,16 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+STATIC_DATA_DIR = os.path.dirname(os.path.dirname(__file__))
+STATICFILES_DIRS = (
+    os.path.join(STATIC_DATA_DIR, 'quero_cafe', 'static'),
+)
+
+STATIC_DATA_DIR = os.path.dirname(os.path.dirname(__file__))
+STATIC_ROOT = os.path.join(STATIC_DATA_DIR, 'static')
 STATIC_URL = '/static/'

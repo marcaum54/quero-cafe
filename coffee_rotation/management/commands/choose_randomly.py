@@ -15,37 +15,57 @@ class Command(BaseCommand):
     help = "Comando escolhe um dos usuários que ainda não fizeram café."
 
     def handle(self, *args, **options):
-        try:
-            #SCHEDULES HOURS
-            now = datetime.now()
-            schedules = { 'morning': now.replace(hour=8, minute=0, second=0), 'afternoon': now.replace(hour=13, minute=0, second=0) }
 
-            #ACTUAL CYCLE
-            cycle = Cycle.objects.last()
+        #SCHEDULES HOURS
+        now = datetime.now()
 
-            #LAST TURN
-            last_turn = Turn.objects.filter(cycle=cycle, date_removed__isnull=True).last()
-            penult_turn = Turn.objects.filter(cycle=cycle, date_removed__isnull=True).exclude(id=last_turn.id).last()
+        #ACTUAL CYCLE
+        cycle = Cycle.objects.last()
 
-            #SEARCHING USERS NOT CHOOSED BEFORE
-            turns = Turn.objects.filter(cycle=cycle)
-            calleds = turns.filter(date_removed__isnull=True).values_list('user', flat=True)
-            not_calleds = User.objects.exclude(pk__in=calleds)
+        #VERIFIY LAST TURN HOUR
+        if 'verify_last_turn' in options:
 
-            if not not_calleds.count():
-                cycle = Cycle.objects.create(name=re.sub('\d(?!\d)', lambda x: str(int(x.group(0)) + 1), cycle.name))
-                not_calleds = User.objects.all()
+            schedules = {
+                'morning': {
+                    'start': now.replace(hour=0, minute=0, second=0),
+                    'end': now.replace(hour=7, minute=59, second=59),
+                },
+                'afternoon': {
+                    'start': now.replace(hour=8, minute=1, second=0),
+                    'end': now.replace(hour=12, minute=59, second=59)
+                }
+            }
 
-            #CHOOSED RANDOMLY
-            choosed = not_calleds[randint(0, not_calleds.count() - 1)]
+            schedule = None
 
-            #CREATING TURN
-            Turn.objects.create(user=choosed, cycle=cycle, date_choosed=datetime.now())
+            if schedules['morning']['start'] < now < schedules['morning']['end']:
+                schedule = 'morning'
 
-            #ENVIANDO MENSAGEM AO GRUPO DO SLACK
-            mensagem = "("+ choosed.first_name +") foi o escolhido para fazer o café."
-            Message.send(text=mensagem)
+            if schedules['afternoon']['start'] < now < schedules['afternoon']['end']:
+                schedule = 'afternoon'
 
-        except ValueError as error:
+            if schedule is not None:
+                last_turn = Turn.objects.filter(cycle=cycle, date_removed__isnull=True).last()
 
-            print(repr(error))
+                if last_turn is not None:
+                    if schedules[schedule]['start'] < last_turn.get_date() < schedules[schedule]['end']:
+                        raise ValueError('Um usuário já foi escolhido')
+
+        #SEARCHING USERS NOT CHOOSED BEFORE
+        turns = Turn.objects.filter(cycle=cycle)
+        calleds = turns.filter(date_removed__isnull=True).values_list('user', flat=True)
+        not_calleds = User.objects.exclude(pk__in=calleds)
+
+        if not not_calleds.count():
+            cycle = Cycle.objects.create(name=re.sub('\d(?!\d)', lambda x: str(int(x.group(0)) + 1), cycle.name))
+            not_calleds = User.objects.all()
+
+        #CHOOSED RANDOMLY
+        choosed = not_calleds[randint(0, not_calleds.count() - 1)]
+
+        #CREATING TURN
+        Turn.objects.create(user=choosed, cycle=cycle, date_choosed=datetime.now())
+
+        #ENVIANDO MENSAGEM AO GRUPO DO SLACK
+        mensagem = "("+ choosed.first_name +" "+ choosed.last_name +") foi o escolhido para fazer o café."
+        Message.send(text=mensagem)
