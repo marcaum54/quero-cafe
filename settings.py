@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 
     #THIRDS
     'django_extensions',
-    'requests',
+    # 'requests',
 
     #APPS
     'core',

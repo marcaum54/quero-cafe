@@ -14,34 +14,17 @@
 
 {% block content %}
 
-    {% include 'partials/modal-delete.html' %}
+    {% include 'partials/modal/delete.html' %}
+    {% include 'partials/modal/justificativa.html' %}
 
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <h2>Faltantes</h2>
-            <ul class="usuarios list-group">
-                {% for usuario in not_calleds %}
-                <li class="list-group-item text-center">
-                    {{ usuario.first_name }} {{ usuario.last_name }}
-                </li>
-                {% endfor %}
-            </ul>
+            {% include 'partials/faltantes.html' %}
         </div>
         <div class="col-xs-12 col-sm-6">
             <h2>Turnos</h2>
-            <ul class="usuarios list-group">
-                {% for turn in turns %}
-                <li class="list-group-item text-center {% if turn.is_removed %}text-danger{% endif %}">
-                    <b>{{ turn.user.first_name }} {{ turn.user.last_name }}</b>
-                    <br/>
-                    <small>{{ turn.get_type }} em {{ turn.presenter_date }}</small>
-
-                    {% if not turn.is_removed %}
-                    <button type="button" class="btn btn-xs btn-danger pull-right show-modal-delete" data-action="{% url 'remove_turn' turn.id %}"><i class="fa fa-times"></i></button>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
+            {% include 'partials/turnos.html' %}
         </div>
     </div>
 
