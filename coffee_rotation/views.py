@@ -27,7 +27,7 @@ def list(request):
 
     calleds = turns.values_list('user', flat=True)
 
-    not_calleds = User.objects.exclude(pk__in=calleds.filter(date_removed__isnull=True))
+    not_calleds = User.objects.exclude(pk__in=calleds.filter(date_removed__isnull=True)).filter(is_active=True)
 
     return render(request, 'list.html', {
         'turns': turns,

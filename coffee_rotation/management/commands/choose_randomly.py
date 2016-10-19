@@ -54,11 +54,11 @@ class Command(BaseCommand):
         #SEARCHING USERS NOT CHOOSED BEFORE
         turns = Turn.objects.filter(cycle=cycle)
         calleds = turns.filter(date_removed__isnull=True).values_list('user', flat=True)
-        not_calleds = User.objects.exclude(pk__in=calleds)
+        not_calleds = User.objects.exclude(pk__in=calleds).filter(is_active=True)
 
         if not not_calleds.count():
             cycle = Cycle.objects.create(name=re.sub('\d(?!\d)', lambda x: str(int(x.group(0)) + 1), cycle.name))
-            not_calleds = User.objects.all()
+            not_calleds = User.objects.all().filter(is_active=True)
 
         #CHOOSED RANDOMLY
         choosed = not_calleds[randint(0, not_calleds.count() - 1)]
